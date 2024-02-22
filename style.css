@@ -43,12 +43,30 @@ body,
   margin: 20px 0;
 }
 
+#start-game {
+  position: absolute;
+  text-align: center;
+  text-transform: capitalize;
+  padding: 20px;
+  margin: 0;
+  top: 70%;
+}
+
+#game-over {
+  position: absolute;
+  text-align: center;
+  text-transform: capitalize;
+  padding: 20px;
+  margin: 0;
+  top: 70%;
+}
+
 .snake {
-  border: black 3px solid;
+  border: black 10px solid;
   background-color: black;
 }
 
 .food {
   background-color: cyan;
-  border: black 3px solid;
+  border: black 5px solid;
 }

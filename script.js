@@ -1,6 +1,9 @@
 // GAME BOARD IS DONE BUT NOW WE GOTTA CREATE OUR GAME BOARD VIA JAVASCRIPT
 
 const gameBoard = document.getElementById("game-board");
+const instruction = document.getElementById("start-game");
+const gameOverText = document.getElementById("game-over");
+gameOverText.style.display = "none";
 // defining variables
 let cell = [{ x: 0, y: 0 }];
 // cell would represent each individual square on the grid
@@ -9,7 +12,8 @@ let snake = [{ x: 10, y: 10 }];
 let food = changeFood();
 // food will be generated randomly, so we have to use a function to randomly generate possible x and y values within the grid
 // note that food should not be generated on the snake itself - remember to check for condition
-
+let gameOver = false;
+let gameStart = true;
 function createBoard() {
   // clear the board everytime this function runs
   gameBoard.innerHTML = "";
@@ -62,30 +66,37 @@ function setLocation(cell, position) {
 }
 
 function changeFood() {
-  const x = Math.floor(Math.random() * 30);
-  const y = Math.floor(Math.random() * 30);
+  // math.random gives a value of 0 to <1 , math.floor rounds that number down. 30 due to grid size
+  const x = Math.floor(Math.random() * 30) + 1;
+  const y = Math.floor(Math.random() * 30) + 1;
   return [{ x, y }];
 }
-createBoard();
 
 // movement of Snake
 let direction = "right";
 function moveSnake() {
   let head = { x: snake[0].x, y: snake[0].y };
-  console.log(head);
-  console.log(food);
+
   switch (direction) {
     case "right":
-      head.x++;
+      if (head.x <= 29) {
+        head.x++;
+      }
       break;
     case "down":
-      head.y++;
+      if (head.y <= 29) {
+        head.y++;
+      }
       break;
     case "left":
-      head.x--;
+      if (head.x >= 1) {
+        head.x--;
+      }
       break;
     case "up":
-      head.y--;
+      if (head.y >= 1) {
+        head.y--;
+      }
       break;
   }
 
@@ -101,38 +112,103 @@ function moveSnake() {
     // pop to remove the last element
     snake.pop();
   }
+  checkCollisionWithBorder();
+  console.log(head.x);
+  console.log(head.y);
+  console.log(snake[0].x);
+  console.log(snake[0].y);
+  console.log(snake[1].x);
+  console.log(snake[1].y);
+
+  checkCollisionWithItself();
 }
 
 // event listener for keypress
 
 // refer to https://www.toptal.com/developers/keycode for keycode
 document.addEventListener("keydown", (event) => {
-  switch (event.key) {
-    case "ArrowUp":
-      direction = "up";
-      break;
-    case "ArrowRight":
-      direction = "right";
-      break;
-    case "ArrowDown":
-      direction = "down";
-      break;
-    case "ArrowLeft":
-      direction = "left";
-      break;
+  if (gameStart === true && event.key === "Enter") {
+    instruction.style.display = "none";
+    gameLoop();
+  } else if (gameOver === true && event.key === " ") {
+    // function to refresh page
+    location.reload();
+  } else {
+    switch (event.key) {
+      // also prevents moving in the opposite direction
+      case "ArrowUp":
+        if (direction != "down") {
+          direction = "up";
+        }
+        break;
+      case "ArrowRight":
+        if (direction != "left") {
+          direction = "right";
+        }
+        break;
+      case "ArrowDown":
+        if (direction != "up") {
+          direction = "down";
+        }
+        break;
+      case "ArrowLeft":
+        if (direction != "right") {
+          direction = "left";
+        }
+        break;
+    }
   }
 });
 
 // setInterval runs the functions every 'delay' - in this case, 1000ms.
-let gameInterval = setInterval(function () {
-  moveSnake();
-  createBoard();
+function gameLoop() {
+  const gameLoop = setInterval(function () {
+    // create the snake
+    createBoard();
 
-  //to stop timer
-  clearInterval(gameInterval);
-}, 400);
+    // move the snake
+    moveSnake();
+    // check for collision
+  }, 300);
+}
 
-// there should be a gameloop function that continuously runs the game
+//gameLoop();
+
+// to work on - collision
+
+// with itself
+function checkCollisionWithItself() {
+  let head = { x: snake[0].x, y: snake[0].y };
+
+  for (let i = 1; i < snake.length; i++) {
+    if (head.x === snake[i].x && head.y === snake[i].y) {
+      gameOver = true;
+      gameOverText.style.display = "block";
+      clearInterval(gameLoop);
+      console.log("Game Over");
+    }
+  }
+}
+
+// with border
+
+function checkCollisionWithBorder() {
+  let head = { x: snake[0].x, y: snake[0].y };
+  //console.log(head.x);
+  //console.log(head.y);
+  // check collision - if it exceeds the row and column values
+  if (head.x < 1 || head.x >= 30 || head.y < 1 || head.y >= 30) {
+    gameOver = true;
+    gameOverText.style.display = "block";
+    clearInterval(gameLoop);
+    console.log("Game over");
+  }
+}
+
+// current issues
+// food spawns where snake is sometimes then bugs out
+// snake should not be able to touch itself - make a function for this
+// snake moves out of the grid...
 
 // Pseudo code for Snake
 
