@@ -52,13 +52,19 @@ body,
   top: 70%;
 }
 
-#game-over {
+#game-over,
+#restart {
   position: absolute;
   text-align: center;
   text-transform: capitalize;
-  padding: 20px;
+  padding: 0;
   margin: 0;
-  top: 70%;
+  top: 40%;
+  font-weight: bold;
+}
+
+#restart {
+  top: 50%;
 }
 
 .snake {

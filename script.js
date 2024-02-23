@@ -4,6 +4,12 @@ const gameBoard = document.getElementById("game-board");
 const instruction = document.getElementById("start-game");
 const gameOverText = document.getElementById("game-over");
 gameOverText.style.display = "none";
+const restart = document.getElementById("restart");
+restart.style.display = "none";
+let highScore = 0;
+document.getElementById("high-score").innerHTML = highScore;
+// let points = document.getElementById("points");
+
 // defining variables
 let cell = [{ x: 0, y: 0 }];
 // cell would represent each individual square on the grid
@@ -13,7 +19,12 @@ let food = changeFood();
 // food will be generated randomly, so we have to use a function to randomly generate possible x and y values within the grid
 // note that food should not be generated on the snake itself - remember to check for condition
 let gameOver = false;
-let gameStart = true;
+let gameStart = false;
+let gameSpeed = 200;
+
+let foodEaten = false;
+let points = 0;
+
 function createBoard() {
   // clear the board everytime this function runs
   gameBoard.innerHTML = "";
@@ -66,10 +77,17 @@ function setLocation(cell, position) {
 }
 
 function changeFood() {
-  // math.random gives a value of 0 to <1 , math.floor rounds that number down. 30 due to grid size
+  // math.random gives a value of 0 to <1 , math.floor rounds that number down. 30 due to grid size. + 1 so it doesn't give 0.
   const x = Math.floor(Math.random() * 30) + 1;
   const y = Math.floor(Math.random() * 30) + 1;
-  return [{ x, y }];
+  // to ensure that food doesn't spawn on the snake itself
+  for (let i = 0; i < snake.length; i++) {
+    if (snake[i].x === x && snake[i].y === y) {
+      return changeFood();
+    } else {
+      return [{ x, y }];
+    }
+  }
 }
 
 // movement of Snake
@@ -79,12 +97,12 @@ function moveSnake() {
 
   switch (direction) {
     case "right":
-      if (head.x <= 29) {
+      if (head.x <= 30) {
         head.x++;
       }
       break;
     case "down":
-      if (head.y <= 29) {
+      if (head.y <= 30) {
         head.y++;
       }
       break;
@@ -107,27 +125,33 @@ function moveSnake() {
   //console.log(head);
   // when snake eats food
   if (head.x === food[0].x && head.y === food[0].y) {
+    foodEaten = true;
+    console.log(points);
+    //increaseSpeed();
+    increaseScore();
+
+    increaseHighScore();
+    console.log(points);
+
     food = changeFood();
+    foodEaten = false;
   } else {
     // pop to remove the last element
     snake.pop();
   }
-  checkCollisionWithBorder();
-  console.log(head.x);
-  console.log(head.y);
-  console.log(snake[0].x);
-  console.log(snake[0].y);
-  console.log(snake[1].x);
-  console.log(snake[1].y);
+  //checkCollisionWithBorder();
 
-  checkCollisionWithItself();
+  // checkCollisionWithItself();
 }
 
 // event listener for keypress
 
 // refer to https://www.toptal.com/developers/keycode for keycode
 document.addEventListener("keydown", (event) => {
-  if (gameStart === true && event.key === "Enter") {
+  if (gameStart === false && event.key === "Enter") {
+    // set game to start
+    gameStart = true;
+    // removes the initial instruction of 'Press Enter to start"
     instruction.style.display = "none";
     gameLoop();
   } else if (gameOver === true && event.key === " ") {
@@ -160,16 +184,20 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-// setInterval runs the functions every 'delay' - in this case, 1000ms.
+// setInterval runs the functions every 'delay' - in this case, 300ms/gameSpeed
 function gameLoop() {
-  const gameLoop = setInterval(function () {
-    // create the snake
+  let gameLoop = setInterval(function () {
+    // create the board/snake/food
     createBoard();
 
     // move the snake
     moveSnake();
-    // check for collision
-  }, 300);
+    console.log(gameSpeed);
+
+    // check collision - game stops the moment collision is detected
+    checkCollisionWithBorder(gameLoop);
+    checkCollisionWithItself(gameLoop);
+  }, gameSpeed);
 }
 
 //gameLoop();
@@ -177,13 +205,14 @@ function gameLoop() {
 // to work on - collision
 
 // with itself
-function checkCollisionWithItself() {
+function checkCollisionWithItself(gameLoop) {
   let head = { x: snake[0].x, y: snake[0].y };
 
   for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       gameOver = true;
       gameOverText.style.display = "block";
+      restart.style.display = "block";
       clearInterval(gameLoop);
       console.log("Game Over");
     }
@@ -192,23 +221,52 @@ function checkCollisionWithItself() {
 
 // with border
 
-function checkCollisionWithBorder() {
+function checkCollisionWithBorder(gameLoop) {
   let head = { x: snake[0].x, y: snake[0].y };
   //console.log(head.x);
   //console.log(head.y);
   // check collision - if it exceeds the row and column values
-  if (head.x < 1 || head.x >= 30 || head.y < 1 || head.y >= 30) {
+  if (head.x < 1 || head.x > 30 || head.y < 1 || head.y > 30) {
     gameOver = true;
     gameOverText.style.display = "block";
+    restart.style.display = "block";
     clearInterval(gameLoop);
+    console.log(head.x);
     console.log("Game over");
+    console.log(gameSpeed);
+  }
+}
+function increaseSpeed() {
+  if (gameSpeed > 50) {
+    gameSpeed -= 10;
+    return gameSpeed;
   }
 }
 
+function increaseScore() {
+  if (foodEaten == true) {
+    points += 1;
+    document.getElementById("points").innerHTML = points;
+  }
+}
+
+function increaseHighScore() {
+  if (points > highScore) {
+    highScore = points;
+    document.getElementById("high-score").innerHTML = highScore;
+  }
+}
+
+// past issues
+// set it such that when game ends it STOPS the game - DONE
+// pop up for game over - DONE
+// food cannot spawn on itself - DONE
+// updating of score - DONE , except high score
+
 // current issues
-// food spawns where snake is sometimes then bugs out
-// snake should not be able to touch itself - make a function for this
-// snake moves out of the grid...
+// adjust speed of snake
+// update high score
+// try to not use location.reload() -> find a way to manually start/stop a game with functions.
 
 // Pseudo code for Snake
 
