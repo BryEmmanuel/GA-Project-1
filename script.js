@@ -136,7 +136,7 @@ function moveSnake() {
     //increaseSpeedWhenFoodEaten();
     increaseScore();
 
-    increaseHighScore();
+    // increaseHighScore();
     console.log(points);
 
     food = changeFood();
@@ -164,6 +164,7 @@ document.addEventListener("keydown", (event) => {
   } else if (gameOver === true && event.key === " ") {
     // function to refresh page
     location.reload();
+    //endGameAndTryAgain();
   } else {
     switch (event.key) {
       // also prevents moving in the opposite direction
@@ -252,6 +253,8 @@ function checkCollisionWithItself(gameLoop) {
       restart.style.display = "block";
       clearInterval(gameLoop);
       console.log("Game Over");
+      console.log(gameStart);
+      console.log(gameOver);
     }
   }
 }
@@ -271,6 +274,8 @@ function checkCollisionWithBorder(gameLoop) {
     console.log(head.x);
     console.log("Game over");
     console.log(gameSpeed);
+    console.log(gameStart);
+    console.log(gameOver);
   }
 }
 
@@ -282,6 +287,9 @@ function increaseScore() {
 }
 
 function increaseHighScore() {
+  highScore = localStorage.getItem("high-score");
+  document.getElementById("high-score").innerHTML =
+    localStorage.getItem("high-score");
   if (points > highScore) {
     highScore = points;
     document.getElementById("high-score").innerHTML = highScore;
@@ -357,6 +365,19 @@ function gameLoop() {
 // adjust speed of snake --- FINALLY DONE OMG
 // update high score
 // try to not use location.reload() -> find a way to manually start/stop a game with functions.
+
+// UPDATE SCORE ============== START HERE
+// have a startGame(); , now need a endGame(); to replace the location.reload function
+function endGameAndTryAgain() {
+  // updates highScore
+  increaseHighScore();
+  // set gameStart = false;
+
+  gameStart = false;
+
+  // startGame();
+  startGame();
+}
 
 // Pseudo code for Snake
 
