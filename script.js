@@ -20,11 +20,13 @@ let food = changeFood();
 // note that food should not be generated on the snake itself - remember to check for condition
 let gameOver = false;
 let gameStart = false;
+
 let gameSpeed = 200;
+// let newSpeed = gameSpeed;
 
 let foodEaten = false;
 let points = 0;
-
+let gameLoop;
 function createBoard() {
   // clear the board everytime this function runs
   gameBoard.innerHTML = "";
@@ -127,7 +129,11 @@ function moveSnake() {
   if (head.x === food[0].x && head.y === food[0].y) {
     foodEaten = true;
     console.log(points);
-    //increaseSpeed();
+    //clearInterval(gameLoop);
+    increaseSpeed();
+    //getSpeed();
+
+    //increaseSpeedWhenFoodEaten();
     increaseScore();
 
     increaseHighScore();
@@ -139,9 +145,6 @@ function moveSnake() {
     // pop to remove the last element
     snake.pop();
   }
-  //checkCollisionWithBorder();
-
-  // checkCollisionWithItself();
 }
 
 // event listener for keypress
@@ -149,11 +152,15 @@ function moveSnake() {
 // refer to https://www.toptal.com/developers/keycode for keycode
 document.addEventListener("keydown", (event) => {
   if (gameStart === false && event.key === "Enter") {
+    startGame();
+    /*
     // set game to start
     gameStart = true;
     // removes the initial instruction of 'Press Enter to start"
     instruction.style.display = "none";
+
     gameLoop();
+    */
   } else if (gameOver === true && event.key === " ") {
     // function to refresh page
     location.reload();
@@ -185,6 +192,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 // setInterval runs the functions every 'delay' - in this case, 300ms/gameSpeed
+/*
 function gameLoop() {
   let gameLoop = setInterval(function () {
     // create the board/snake/food
@@ -192,6 +200,7 @@ function gameLoop() {
 
     // move the snake
     moveSnake();
+
     console.log(gameSpeed);
 
     // check collision - game stops the moment collision is detected
@@ -199,9 +208,37 @@ function gameLoop() {
     checkCollisionWithItself(gameLoop);
   }, gameSpeed);
 }
+*/
+function startGame() {
+  gameStart = true;
 
+  instruction.style.display = "none";
+
+  runGame(gameSpeed);
+}
 //gameLoop();
+function runGame(newGameSpeed) {
+  clearInterval(gameLoop);
+  gameLoop = setInterval(function () {
+    // create the board/snake/food
+    createBoard();
 
+    // move the snake
+    moveSnake();
+
+    console.log(gameSpeed);
+
+    // check collision - game stops the moment collision is detected
+    checkCollisionWithBorder(gameLoop);
+    checkCollisionWithItself(gameLoop);
+  }, newGameSpeed);
+}
+function increaseSpeed() {
+  if (foodEaten == true && gameSpeed > 50) {
+    gameSpeed -= 10;
+    runGame(gameSpeed);
+  }
+}
 // to work on - collision
 
 // with itself
@@ -236,12 +273,6 @@ function checkCollisionWithBorder(gameLoop) {
     console.log(gameSpeed);
   }
 }
-function increaseSpeed() {
-  if (gameSpeed > 50) {
-    gameSpeed -= 10;
-    return gameSpeed;
-  }
-}
 
 function increaseScore() {
   if (foodEaten == true) {
@@ -256,7 +287,66 @@ function increaseHighScore() {
     document.getElementById("high-score").innerHTML = highScore;
   }
 }
+/*
+function increaseSpeed() {
+  if (gameSpeed > 150) {
+    clearInterval(gameLoop);
+    gameSpeed -= 10;
+    gameSpeed = newSpeed;
+    gameLoop = setInterval(function () {
+      // create the board/snake/food
+      createBoard();
 
+      // move the snake
+      moveSnake();
+
+      console.log(gameSpeed);
+
+      // check collision - game stops the moment collision is detected
+      checkCollisionWithBorder(gameLoop);
+      checkCollisionWithItself(gameLoop);
+    }, gameSpeed);
+  }
+
+  // clearInterval(gameLoop);
+  // gameLoop(gameSpeed);
+}
+*/
+/*
+function getSpeed(gameSpeed) {
+  if (foodEaten == false) {
+    return gameSpeed;
+  } else if (foodEaten == true) {
+    return (gameSpeed -= 5);
+  } else {
+    return gameSpeed;
+  }
+}
+
+function increaseSpeedWhenFoodEaten() {
+  if (foodEaten == true) {
+    let speed = getSpeed(gameSpeed);
+    setTimeout(getSpeed, speed);
+  }
+}
+
+// testing new code
+function gameLoop() {
+  let gameLoop = setTimeout(function () {
+    // create the board/snake/food
+    createBoard();
+
+    // move the snake
+    moveSnake();
+
+    console.log(gameSpeed);
+
+    // check collision - game stops the moment collision is detected
+    checkCollisionWithBorder(gameLoop);
+    checkCollisionWithItself(gameLoop);
+  }, gameSpeed);
+}
+*/
 // past issues
 // set it such that when game ends it STOPS the game - DONE
 // pop up for game over - DONE
@@ -264,7 +354,7 @@ function increaseHighScore() {
 // updating of score - DONE , except high score
 
 // current issues
-// adjust speed of snake
+// adjust speed of snake --- FINALLY DONE OMG
 // update high score
 // try to not use location.reload() -> find a way to manually start/stop a game with functions.
 
