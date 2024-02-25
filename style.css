@@ -61,6 +61,7 @@ body,
   margin: 0;
   top: 40%;
   font-weight: bold;
+  z-index: 1;
 }
 
 #restart {
@@ -70,9 +71,11 @@ body,
 .snake {
   border: black 10px solid;
   background-color: black;
+  z-index: 0;
 }
 
 .food {
   background-color: cyan;
   border: black 5px solid;
+  z-index: 0;
 }

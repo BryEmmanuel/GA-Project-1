@@ -305,12 +305,17 @@ function increaseScore() {
 }
 
 function increaseHighScore() {
-  highScore = localStorage.getItem("high-score");
-  document.getElementById("high-score").innerHTML =
-    localStorage.getItem("high-score");
+  //highScore = localStorage.getItem("high-score");
+  //console.log(highScore);
+  //document.getElementById("high-score").innerHTML =
+  //localStorage.getItem("high-score");
+  //console.log(highScore);
   if (points > highScore) {
     highScore = points;
     document.getElementById("high-score").innerHTML = highScore;
+    // localStorage.setItem("high-score", highScore);
+    //console.log(highScore);
+    //document.getElementById("high-score").innerHTML = highScore;
   }
 }
 /*
@@ -405,7 +410,9 @@ function resetGame() {
   restart.style.display = "none";
   gameOverText.style.display = "none";
   console.log(points);
+  console.log(highScore);
   increaseHighScore();
+  console.log(highScore);
   points = 0;
   document.getElementById("points").innerHTML = points;
   console.log(points);
