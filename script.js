@@ -82,14 +82,18 @@ function changeFood() {
   // math.random gives a value of 0 to <1 , math.floor rounds that number down. 30 due to grid size. + 1 so it doesn't give 0.
   const x = Math.floor(Math.random() * 30) + 1;
   const y = Math.floor(Math.random() * 30) + 1;
-  // to ensure that food doesn't spawn on the snake itself
+  // to ensure that food doesn't spawn on the snake itself --- this code doesn't work
+  /*
   for (let i = 0; i < snake.length; i++) {
-    if (snake[i].x === x && snake[i].y === y) {
+    if (x === snake[i].x && y === snake[i].y) {
+      console.log("changing food");
       return changeFood();
     } else {
       return [{ x, y }];
     }
   }
+  */
+  return [{ x, y }];
 }
 
 // movement of Snake
@@ -140,6 +144,14 @@ function moveSnake() {
     console.log(points);
 
     food = changeFood();
+    // checks if new food generated is in the snake
+    for (let i = 0; i < snake.length; i++) {
+      if (food[0].x === snake[i].x && food[0].y === snake[i].y) {
+        console.log("food is in snake, changing food");
+        food = changeFood();
+      }
+    }
+    console.log("food not in snake");
     foodEaten = false;
   } else {
     // pop to remove the last element
@@ -163,8 +175,8 @@ document.addEventListener("keydown", (event) => {
     */
   } else if (gameOver === true && event.key === " ") {
     // function to refresh page
-    location.reload();
-    //endGameAndTryAgain();
+    //location.reload();
+    endGameAndTryAgain();
   } else {
     switch (event.key) {
       // also prevents moving in the opposite direction
@@ -214,6 +226,7 @@ function startGame() {
   gameStart = true;
 
   instruction.style.display = "none";
+  document.getElementById("points").innerHTML = points;
 
   runGame(gameSpeed);
 }
@@ -226,8 +239,13 @@ function runGame(newGameSpeed) {
 
     // move the snake
     moveSnake();
-
-    console.log(gameSpeed);
+    // console.log(snake[0].x);
+    // console.log(snake[0].y);
+    // console.log(snake[1].x);
+    // console.log(snake[1].y);
+    // console.log(snake[2].x);
+    // console.log(snake[2].y);
+    //console.log(gameSpeed);
 
     // check collision - game stops the moment collision is detected
     checkCollisionWithBorder(gameLoop);
@@ -236,7 +254,7 @@ function runGame(newGameSpeed) {
 }
 function increaseSpeed() {
   if (foodEaten == true && gameSpeed > 50) {
-    gameSpeed -= 10;
+    gameSpeed -= 5;
     runGame(gameSpeed);
   }
 }
@@ -363,20 +381,38 @@ function gameLoop() {
 
 // current issues
 // adjust speed of snake --- FINALLY DONE OMG
-// update high score
-// try to not use location.reload() -> find a way to manually start/stop a game with functions.
+// update high score --- DONEEEEE YAY
+// try to not use location.reload() -> find a way to manually start/stop a game with functions. --- SOLVED
 
 // UPDATE SCORE ============== START HERE
-// have a startGame(); , now need a endGame(); to replace the location.reload function
+// have a startGame(); , now need an endGame(); to replace the location.reload function
 function endGameAndTryAgain() {
+  // reset
+  resetGame();
   // updates highScore
-  increaseHighScore();
+  //increaseHighScore();
+  // reset points
+
   // set gameStart = false;
 
   gameStart = false;
 
   // startGame();
   startGame();
+}
+
+function resetGame() {
+  restart.style.display = "none";
+  gameOverText.style.display = "none";
+  console.log(points);
+  increaseHighScore();
+  points = 0;
+  document.getElementById("points").innerHTML = points;
+  console.log(points);
+  snake = [{ x: 10, y: 10 }];
+  food = changeFood();
+  direction = "right";
+  gameSpeed = 200;
 }
 
 // Pseudo code for Snake
