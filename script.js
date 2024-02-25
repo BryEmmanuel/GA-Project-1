@@ -7,7 +7,7 @@ gameOverText.style.display = "none";
 const restart = document.getElementById("restart");
 restart.style.display = "none";
 let highScore = 0;
-document.getElementById("high-score").innerHTML = highScore;
+document.getElementById("high-score").innerHTML = "HighScore: " + highScore;
 // let points = document.getElementById("points");
 
 // defining variables
@@ -226,7 +226,7 @@ function startGame() {
   gameStart = true;
 
   instruction.style.display = "none";
-  document.getElementById("points").innerHTML = points;
+  document.getElementById("points").innerHTML = "Points: " + points;
 
   runGame(gameSpeed);
 }
@@ -300,7 +300,7 @@ function checkCollisionWithBorder(gameLoop) {
 function increaseScore() {
   if (foodEaten == true) {
     points += 1;
-    document.getElementById("points").innerHTML = points;
+    document.getElementById("points").innerHTML = "Points: " + points;
   }
 }
 
@@ -312,7 +312,7 @@ function increaseHighScore() {
   //console.log(highScore);
   if (points > highScore) {
     highScore = points;
-    document.getElementById("high-score").innerHTML = highScore;
+    document.getElementById("high-score").innerHTML = "HighScore: " + highScore;
     // localStorage.setItem("high-score", highScore);
     //console.log(highScore);
     //document.getElementById("high-score").innerHTML = highScore;
