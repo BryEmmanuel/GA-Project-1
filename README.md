@@ -11,12 +11,23 @@ Snake is about an ever-growing snake that grows in length whenever it eats. The 
 ![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%201%20-%20game%20start.png?raw=true)
 ![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%203%20-%20game%20play.png?raw=true)
 ![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%202%20-%20game%20over.png?raw=true)
+![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%204%20-%20game%20play.png?raw=true)
 
 ## Technologies used
 
 - HTML
 - CSS
 - JavaScript
+
+## Getting Started - How To Play
+
+Instructions:
+
+- Press "Enter" to start the game.
+- Use arrow keys : up , down, left, right to change the direction of the snake.
+- When game ends, press "Space" to try again.
+
+Attached URL for game: [Snake Game](https://bryemmanuel.github.io/GA-Project-1/)
 
 ## Future plans
 
