@@ -1,4 +1,4 @@
-# GA-Project-1 Snake Game
+# GA-Project-1: Snake Game
 
 Based on the concept of the original snake game
 
