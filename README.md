@@ -8,7 +8,6 @@ Snake is about an ever-growing snake that grows in length whenever it eats. The 
 
 ## Game Preview
 
-<Screenshots>
 ![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%201%20-%20game%20start.png?raw=true)
 ![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%203%20-%20game%20play.png?raw=true)
 ![alt text](https://github.com/BryEmmanuel/GA-Project-1/blob/main/Screenshot%202%20-%20game%20over.png?raw=true)
