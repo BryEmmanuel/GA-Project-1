@@ -216,7 +216,7 @@ function runGame(newGameSpeed) {
 
 // to increase the speed of the snake
 function increaseSpeed() {
-  if (foodEaten == true && gameSpeed > 50) {
+  if (foodEaten === true && gameSpeed > 50) {
     gameSpeed -= 5;
     // note that gameSpeed changes and is passed into runGame(), hence the increment works
     runGame(gameSpeed);
